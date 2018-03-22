@@ -9,36 +9,36 @@ import org.apache.zookeeper.ZooDefs.Ids;
 import org.apache.zookeeper.ZooKeeper;
 
 public class SmipleZkClientDemo {
-	// »á»°³¬Ê±Ê±¼ä£¬ÉèÖÃÎªÓëÏµÍ³Ä¬ÈÏÊ±¼äÒ»ÖÂ
+	// ä¼šè¯è¶…æ—¶æ—¶é—´ï¼Œè®¾ç½®ä¸ºä¸ç³»ç»Ÿé»˜è®¤æ—¶é—´ä¸€è‡´
 	private static final int SESSION_TIMEOUT = 30000;
-	// ´´½¨ ZooKeeper ÊµÀı
+	// åˆ›å»º ZooKeeper å®ä¾‹
 	ZooKeeper zk;
-	// ´´½¨ Watcher ÊµÀı
+	// åˆ›å»º Watcher å®ä¾‹
 	Watcher wh = new Watcher() {
 		public void process(org.apache.zookeeper.WatchedEvent event)
 		{
 			System.out.println(event.toString());
 		}
 	};
-	// ³õÊ¼»¯ ZooKeeper ÊµÀı
+	// åˆå§‹åŒ– ZooKeeper å®ä¾‹
 	private void createZKInstance() throws IOException
 	{
 		zk = new ZooKeeper("hadoop1:2181", SmipleZkClientDemo.SESSION_TIMEOUT, this.wh);
 	}
 	private void ZKOperations() throws IOException, InterruptedException, KeeperException
 	{
-		System.out.println("/n1. ´´½¨ ZooKeeper ½Úµã (znode £º zoo2, Êı¾İ£º myData2 £¬È¨ÏŞ£º OPEN_ACL_UNSAFE £¬½ÚµãÀàĞÍ£º Persistent");
+		System.out.println("/n1. åˆ›å»º ZooKeeper èŠ‚ç‚¹ (znode ï¼š zoo2, æ•°æ®ï¼š myData2 ï¼Œæƒé™ï¼š OPEN_ACL_UNSAFE ï¼ŒèŠ‚ç‚¹ç±»å‹ï¼š Persistent");
 		zk.create("/zoo2", "myData2".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-		System.out.println("/n2. ²é¿´ÊÇ·ñ´´½¨³É¹¦£º ");
+		System.out.println("/n2. æŸ¥çœ‹æ˜¯å¦åˆ›å»ºæˆåŠŸï¼š ");
 		System.out.println(new String(zk.getData("/zoo2", false, null)));
-		System.out.println("/n3. ĞŞ¸Ä½ÚµãÊı¾İ ");
+		System.out.println("/n3. ä¿®æ”¹èŠ‚ç‚¹æ•°æ® ");
 		zk.setData("/zoo2", "shenlan211314".getBytes(), -1);
-		System.out.println("/n4. ²é¿´ÊÇ·ñĞŞ¸Ä³É¹¦£º ");
+		System.out.println("/n4. æŸ¥çœ‹æ˜¯å¦ä¿®æ”¹æˆåŠŸï¼š ");
 		System.out.println(new String(zk.getData("/zoo2", false, null)));
-		System.out.println("/n5. É¾³ı½Úµã ");
+		System.out.println("/n5. åˆ é™¤èŠ‚ç‚¹ ");
 		zk.delete("/zoo2", -1);
-		System.out.println("/n6. ²é¿´½ÚµãÊÇ·ñ±»É¾³ı£º ");
-		System.out.println(" ½Úµã×´Ì¬£º [" + zk.exists("/zoo2", false) + "]");
+		System.out.println("/n6. æŸ¥çœ‹èŠ‚ç‚¹æ˜¯å¦è¢«åˆ é™¤ï¼š ");
+		System.out.println(" èŠ‚ç‚¹çŠ¶æ€ï¼š [" + zk.exists("/zoo2", false) + "]");
 	}
 	private void ZKClose() throws InterruptedException
 	{

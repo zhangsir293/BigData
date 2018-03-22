@@ -15,7 +15,7 @@ import org.junit.Test;
 
 public class SimpleZkClient {
 
-	private static final String connectString = "192.168.0.101:2181,192.168.0.103:2181,192.168.0.105:2181";
+	private static final String connectString = "hadoop1:2181,hadoop2:2181,hadoop3:2181";
 	private static final int sessionTimeout = 2000;
 
 	ZooKeeper zkClient = null;
@@ -25,7 +25,7 @@ public class SimpleZkClient {
 		zkClient = new ZooKeeper(connectString, sessionTimeout, new Watcher() {
 			@Override
 			public void process(WatchedEvent event) {
-				// ÊÕµ½ÊÂ¼şÍ¨ÖªºóµÄ»Øµ÷º¯Êı£¨Ó¦¸ÃÊÇÎÒÃÇ×Ô¼ºµÄÊÂ¼ş´¦ÀíÂß¼­£©
+				// æ”¶åˆ°äº‹ä»¶é€šçŸ¥åçš„å›è°ƒå‡½æ•°ï¼ˆåº”è¯¥æ˜¯æˆ‘ä»¬è‡ªå·±çš„äº‹ä»¶å¤„ç†é€»è¾‘ï¼‰
 				System.out.println(event.getType() + "---" + event.getPath());
 				try {
 					zkClient.getChildren("/", true);
@@ -37,21 +37,20 @@ public class SimpleZkClient {
 	}
 
 	/**
-	 * Êı¾İµÄÔöÉ¾¸Ä²é
+	 * æ•°æ®çš„å¢åˆ æ”¹æŸ¥
 	 * 
 	 * @throws InterruptedException
 	 * @throws KeeperException
 	 */
 
-	// ´´½¨Êı¾İ½Úµãµ½zkÖĞ
-	@Test
+	// åˆ›å»ºæ•°æ®èŠ‚ç‚¹åˆ°zkä¸­
 	public void testCreate() throws KeeperException, InterruptedException {
-		// ²ÎÊı1£ºÒª´´½¨µÄ½ÚµãµÄÂ·¾¶ ²ÎÊı2£º½Úµã´óÊı¾İ ²ÎÊı3£º½ÚµãµÄÈ¨ÏŞ ²ÎÊı4£º½ÚµãµÄÀàĞÍ
+		// å‚æ•°1ï¼šè¦åˆ›å»ºçš„èŠ‚ç‚¹çš„è·¯å¾„ å‚æ•°2ï¼šèŠ‚ç‚¹å¤§æ•°æ® å‚æ•°3ï¼šèŠ‚ç‚¹çš„æƒé™ å‚æ•°4ï¼šèŠ‚ç‚¹çš„ç±»å‹
 		String nodeCreated = zkClient.create("/eclipse", "hellozk".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-		//ÉÏ´«µÄÊı¾İ¿ÉÒÔÊÇÈÎºÎÀàĞÍ£¬µ«¶¼Òª×ª³Ébyte[]
+		//ä¸Šä¼ çš„æ•°æ®å¯ä»¥æ˜¯ä»»ä½•ç±»å‹ï¼Œä½†éƒ½è¦è½¬æˆbyte[]
 	}
 
-	//ÅĞ¶ÏznodeÊÇ·ñ´æÔÚ
+	//åˆ¤æ–­znodeæ˜¯å¦å­˜åœ¨
 	@Test	
 	public void testExist() throws Exception{
 		Stat stat = zkClient.exists("/eclipse", false);
@@ -60,7 +59,7 @@ public class SimpleZkClient {
 		
 	}
 	
-	// »ñÈ¡×Ó½Úµã
+	// è·å–å­èŠ‚ç‚¹
 	@Test
 	public void getChildren() throws Exception {
 		List<String> children = zkClient.getChildren("/", true);
@@ -70,7 +69,7 @@ public class SimpleZkClient {
 		Thread.sleep(Long.MAX_VALUE);
 	}
 
-	//»ñÈ¡znodeµÄÊı¾İ
+	//è·å–znodeçš„æ•°æ®
 	@Test
 	public void getData() throws Exception {
 		
@@ -79,16 +78,16 @@ public class SimpleZkClient {
 		
 	}
 	
-	//É¾³ıznode
+	//åˆ é™¤znode
 	@Test
 	public void deleteZnode() throws Exception {
 		
-		//²ÎÊı2£ºÖ¸¶¨ÒªÉ¾³ıµÄ°æ±¾£¬-1±íÊ¾É¾³ıËùÓĞ°æ±¾
+		//å‚æ•°2ï¼šæŒ‡å®šè¦åˆ é™¤çš„ç‰ˆæœ¬ï¼Œ-1è¡¨ç¤ºåˆ é™¤æ‰€æœ‰ç‰ˆæœ¬
 		zkClient.delete("/eclipse", -1);
 		
 		
 	}
-	//É¾³ıznode
+	//åˆ é™¤znode
 	@Test
 	public void setData() throws Exception {
 		
